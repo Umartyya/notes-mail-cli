@@ -1,0 +1,5 @@
+.project
+muhammad_test.rb
+*.swp
+Gemfile.lock
+config.yaml
