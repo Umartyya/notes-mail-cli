@@ -43,7 +43,7 @@ module LotusNotes
     end
 
     def unread_mail
-      mail_docs = Array.new
+      unread_mail_docs = Array.new
       unread_entries = mail_inbox.getAllUnreadEntries
       unread_mail_entry = unread_entries.nil? ? nil : unread_entries.getFirstEntry
       while (!unread_mail_entry.nil?)
@@ -53,10 +53,22 @@ module LotusNotes
         mail[:subject] = mail_doc.getItemValueString("Subject")
         mail[:body] = mail_doc.getItemValueString("Body")
         mail[:unid] = mail_doc.getUniversalID
-        mail_docs.push mail
+        unread_mail_docs.push mail
         unread_mail_entry = unread_entries.getNextEntry
       end
-      mail_docs
+      unread_mail_docs
+    end
+
+    def all_mail
+      all_mail_docs = Array.new
+      all_entries = mail_inbox.getAllEntries
+      mail_entry = all_entries.nil? ? nil : all_entries.getFirstEntry
+      while (!mail_entry.nil?)
+        mail = Hash.new
+        mail_doc = mail_entry.getDocument
+        
+      end
+      all_mail_docs
     end
 
     def mark_mail_as_read(unids)
@@ -78,5 +90,35 @@ module LotusNotes
       mail_database.getView '($Inbox)'
     end
 
+    def each_entry_for (mail_entries, &block)
+      entry = mail_entries.getFirstEntry
+      loop do
+        break if entry.nil?
+        block.call entry
+        entry.getNextEntry
+      end
+    end
+
+    def mail_docs(entry_type)
+      mail_entries = case entry_type
+        when :unread
+          mail_inbox.getAllUnreadEntries
+        when :all
+          mail_inbox.getAllEntries
+        else
+          nil
+      end
+      mail_entry = mail_entries.nil? ? nil : mail_entries.getFirstEntry
+      while (!mail_entry.nil?)
+        mail = Hash.new
+        mail_doc = unread_mail_entry.getDocument
+        mail[:from] = mail_doc.getItemValueString("From")
+        mail[:subject] = mail_doc.getItemValueString("Subject")
+        mail[:body] = mail_doc.getItemValueString("Body")
+        mail[:unid] = mail_doc.getUniversalID
+        unread_mail_docs.push mail
+        unread_mail_entry = unread_entries.getNextEntry
+      end
+    end
   end
 end

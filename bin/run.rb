@@ -10,12 +10,13 @@ include Env
 class NotesMailCLI
   VERSION = '0.0.1'
   DEFAULT_CONFIG_FILE = 'config.yaml'
+
   def self.intro
     puts "=============="
     puts "NOTES MAIL CLI"
     puts "=============="
     puts
-    puts "A quick and dirty notes mail client for quick tasks."
+    puts "A quick and dirty notes mail client."
     puts
     puts "Current version: #{VERSION}"
     puts
