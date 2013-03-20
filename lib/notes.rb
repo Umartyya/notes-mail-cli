@@ -53,17 +53,23 @@ module NotesMailCLI
 
       private
 
+      JAVA_LIB = %w(
+      lotus.domino.NotesThread
+      lotus.domino.NotesFactory
+      lotus.domino.Session
+      lotus.domino.Database
+      lotus.domino.Document
+      lotus.domino.View
+      lotus.domino.ViewEntryCollection
+      lotus.domino.ViewEntry
+      lotus.domino.NotesException
+      )
+
       def import_notes_jar
         require @env.notes_jar_location
-        java_import "lotus.domino.NotesThread"
-        java_import "lotus.domino.NotesFactory"
-        java_import "lotus.domino.Session"
-        java_import "lotus.domino.Database"
-        java_import "lotus.domino.Document"
-        java_import "lotus.domino.View"
-        java_import "lotus.domino.ViewEntryCollection"
-        java_import "lotus.domino.ViewEntry"
-        java_import "lotus.domino.NotesException"
+        JAVA_LIB.each do |lib|
+          java_import lib
+        end
       end
 
       def mail_database
@@ -95,18 +101,30 @@ module NotesMailCLI
         mail_from mail_entries
       end
 
+      ITEM_VALUE_STRINGS = %w(
+      From
+      Subject
+      Body
+      )
+
       def mail_from(mail_entries)
-        mail = Array.new
+        mail = []
         each_entry_in mail_entries do |mail_entry|
-          m = Hash.new
+          m = {}
           mail_doc = mail_entry.getDocument
-          m[:from] = mail_doc.getItemValueString("From")
-          m[:subject] = mail_doc.getItemValueString("Subject")
-          m[:body] = mail_doc.getItemValueString("Body")
+          m.merge! hashify_item_value_strings(mail_doc, ITEM_VALUE_STRINGS)
           m[:unid] = mail_doc.getUniversalID
           mail.push m
         end
         mail
+      end
+
+      def hashify_item_value_strings(doc, strs)
+        hsh = {}
+        strs.each do |str|
+          hsh[str.downcase.to_sym] = doc.getItemValueString(str)
+        end
+        hsh
       end
     end
   end
