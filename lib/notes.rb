@@ -108,23 +108,23 @@ module NotesMailCLI
       )
 
       def mail_from(mail_entries)
-        mail = []
-        each_entry_in mail_entries do |mail_entry|
-          m = {}
-          mail_doc = mail_entry.getDocument
-          m.merge! hashify_item_value_strings(mail_doc, ITEM_VALUE_STRINGS)
-          m[:unid] = mail_doc.getUniversalID
-          mail.push m
+        [].tap do |arr|
+          each_entry_in mail_entries do |mail_entry|
+            arr << {}.tap do |hsh|
+              mail_doc = mail_entry.getDocument
+              hsh.merge! hashify_item_value_strings(mail_doc, ITEM_VALUE_STRINGS)
+              hsh[:unid] = mail_doc.getUniversalID
+            end
+          end
         end
-        mail
       end
 
       def hashify_item_value_strings(doc, strs)
-        hsh = {}
-        strs.each do |str|
-          hsh[str.downcase.to_sym] = doc.getItemValueString(str)
+        {}.tap do |hsh|
+          strs.each do |str|
+            hsh[str.downcase.to_sym] = doc.getItemValueString(str)
+          end
         end
-        hsh
       end
     end
   end
