@@ -85,7 +85,7 @@ module NotesMailCLI
         loop do
           break if entry.nil?
           block.call entry
-          entry.getNextEntry
+          entry = entries.getNextEntry
         end
       end
 
