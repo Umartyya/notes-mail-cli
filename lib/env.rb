@@ -16,5 +16,15 @@ module NotesMailCLI
       @mail_server = config.fetch("connection").fetch("mail_server")
       @mail_file = config.fetch("connection").fetch("mail_file")
     end
+
+    def set(more_opts)
+      more_opts.each do |k, v|
+        self.class.class_eval <<-EXTRAOPTS
+          def #{k.to_s}
+            "#{v.to_s}"
+          end
+        EXTRAOPTS
+      end
+    end
   end
 end
