@@ -12,10 +12,9 @@ module NotesMailCLI
 
     def initialize(config_file)
       config = YAML.load_file config_file
-      @notes_jar_location = config["notes-jar-location"]
-      connection = config["connection"]
-      @mail_server = connection["mail_server"]
-      @mail_file = connection["mail_file"]
+      @notes_jar_location = config.fetch("notes-jar-location")
+      @mail_server = config.fetch("connection").fetch("mail_server")
+      @mail_file = config.fetch("connection").fetch("mail_file")
     end
   end
 end
