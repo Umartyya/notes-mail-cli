@@ -4,7 +4,6 @@ require 'java'
 module NotesMailCLI
   module LotusNotes
     class Mail
-      attr_reader :running, :notes, :env
 
       def initialize(env)
         @env = env

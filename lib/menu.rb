@@ -7,8 +7,6 @@ module NotesMailCLI
     class Main
       include MenuHelper
 
-      attr_reader :env
-
       def initialize(env)
         @env = env
         begin
