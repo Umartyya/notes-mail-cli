@@ -7,21 +7,33 @@ module NotesMailCLI
     class Main
       include MenuHelper
 
+      RETRY_COUNT = 5
+
       def initialize(env)
         @env = env
+        count = 0
         begin
           loop do
-            @notes_pw = ask_for_notes_password
+            count += 1
+            raise "Max retry count reached!" if count > RETRY_COUNT
+            @notes_pw = defined?(@env.password) ? @env.password : ask_for_notes_password
             @notes = LotusNotes::Mail.new @env
             puts "Logging in to Notes..."
             puts
             break if @notes.start(@notes_pw)
+            break if defined?(@env.password) and count > 0
           end
+          raise "Notes unable to start" unless @notes
+          raise "Notes not running" unless @notes.running
           puts "Notes successfully logged in."
           puts
           start
+        rescue Exception=>e
+          puts "Error: #{e.class}"
+          puts "Message: #{e.message}"
+          puts "Trace: #{e.backtrace}"
         ensure
-          @notes.stop
+          @notes.stop if @notes
         end
       end
 

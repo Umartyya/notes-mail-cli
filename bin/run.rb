@@ -27,9 +27,11 @@ module NotesMailCLI
     end
 
     def run
+      @extra_opts = {}
       check_options
       if @run_app
         env = Env.load @config_file
+        env.set @extra_opts
         Menu::Main.new env
       end
     end
@@ -43,16 +45,19 @@ module NotesMailCLI
         @opts = GetoptLong.new(
         ["--help",          "-h", GetoptLong::NO_ARGUMENT],
         ["--use-config",    "-u", GetoptLong::REQUIRED_ARGUMENT],
-        ["--create-config", "-c", GetoptLong::OPTIONAL_ARGUMENT]
+        ["--create-config", "-c", GetoptLong::OPTIONAL_ARGUMENT],
+        ["--password",      "-p", GetoptLong::REQUIRED_ARGUMENT]
         )
         @opts.each do |opt, arg|
           case opt
           when "-h", "--help"
             show_help
-            when "-c", "--create-config"
+          when "-c", "--create-config"
             arg.empty? ? create_config : create_config(arg)
           when "-u", "--use-config"
             use_config arg
+          when "-p", "--password"
+            set_password arg
           end
         end
       end
@@ -62,7 +67,8 @@ module NotesMailCLI
       puts 'Available options: '
       puts '  -h      / --help                  Show this help.'
       puts '  -c FILE / --create-config FILE    Creates a custom config file. FILE is optional. Default is "config.yaml"'
-      puts '  -u FILE / --use-config FILE       Uses a custom config file. FILE is required.'
+      puts '  -u FILE / --use-config FILE       Uses a custom config file.'
+      puts '  -p PASSWORD                       Sets notes password. Will be asked later if not provided.'
       puts
       puts 'If no switch is set, the default is "-u config.yaml"'
       @run_app = false
@@ -111,6 +117,10 @@ module NotesMailCLI
         end
         @run_app = false
       end
+    end
+
+    def set_password(pwd)
+      @extra_opts.merge!({:password => pwd})
     end
   end
 end

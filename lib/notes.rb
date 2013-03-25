@@ -5,6 +5,8 @@ module NotesMailCLI
   module LotusNotes
     class Mail
 
+      attr_reader :running
+
       def initialize(env)
         @env = env
         import_notes_jar
