@@ -4,7 +4,7 @@ A simple Lotus Notes mail client on the command line.
 
 ## Prerequisites
 
-* Lotus Notes installed
+* Lotus Notes installed (probably also configured to use an id file)
 * JRE 6 (or later) installed
 * Lotus Notes installation folder in PATH
 * notes.jar in CLASSPATH
@@ -17,6 +17,30 @@ A simple Lotus Notes mail client on the command line.
 
 * Check all mail
 * Set one (or all) mail as read
+
+## Usage
+
+Run run.rb in the bin folder to start the application. The section below describes the list of available switches.
+
+If none is provided, the application will check for existence and validity of "config.yaml" in the working folder. If both are true, the application will use it. If not, it will prompt to create a valid config and exit.
+
+### List of command line switches
+
+* -h | --help
+
+Shows help file
+
+* -c | --create-config (FILE)
+
+Creates a config file FILE in the working folder. If FILE is not supplied, defaults to "config.yaml".
+
+* -u | --use-config FILE
+
+Uses the config file FILE.
+
+* -p | --password PASSWORD
+
+Can
 
 ## Simple troubleshooting
 
