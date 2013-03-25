@@ -4,6 +4,7 @@ require_relative 'env.rb'
 module NotesMailCLI
   module Action
     include LotusNotes
+
     def self.retrieve_unread_mail(notes)
       unread_mail = Array.new
       begin
